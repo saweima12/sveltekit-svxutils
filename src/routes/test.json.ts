@@ -6,7 +6,7 @@ export const get = async () => {
   const config = await siteConfig();
   const pageMap = await sourcePages();
   
-  const posts : DirectoryClassifierResult = await classifiedSet("post");
+  const posts: DirectoryClassifierResult = await classifiedSet("post");
   const tags: FrontMatterClassifierResult = await classifiedSet("tag");
 
   return {

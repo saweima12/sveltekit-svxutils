@@ -43,7 +43,7 @@ let _classifiedCollection: Record<string, any> = undefined;
  * @param {string} classifierId
  * @return {Promise<Record<string,any>>} 
  */
-export const classifiedSet = async(classifierId: string) : Promise<Record<string, any>> => {
+export const classifiedSet = async(classifierId: string) : Promise<any> => {
   // classify all SourcePage.
   if (!_classifiedCollection) {
     const config = await siteConfig();
@@ -58,6 +58,17 @@ export const classifiedSet = async(classifierId: string) : Promise<Record<string
 
   throw new Error(`classifierId: ${classifierId} not found.`);
 } 
+
+export const getPage = async (indexPath: string) : Promise<SourcePage> => {
+  const pages = await sourcePages();
+  const page = pages[indexPath];
+  
+  if (page)
+    return page;
+
+  throw new Error(`path ${indexPath} not found.`);
+}
+
 
 export type { 
   DirectoryClassifierResult, 
