@@ -16,7 +16,7 @@ npm install -D sveltekit-svxutils
 
 ## Usage
 
-0. add MDsveX preprocess to svelte.config.js.
+- Add mdsvex preprocess to svelte.config.js.
 
 ```js
 import { mdsvex } from 'mdsvex';
@@ -39,7 +39,7 @@ const config = {
 export default config;
 ```
 
-1. create basicly structure
+- Create structure
 
 ```
 
@@ -50,7 +50,7 @@ export default config;
 
 ```
 
-2. add site.config.js to root directory
+- Add site.config.js to root directory
 
 ```js
 const config = {
@@ -64,25 +64,35 @@ const config = {
 export default config;
 ```
 
-3. add a endpoint to /src/routes/test.json.ts
+- Add an endpoint to /src/routes/test.json.ts
 
 ```ts
-import { siteConfig, sourcePages } from 'sveltekit-svxutils';
+import type { 
+  DirectoryClassifierResult, 
+  FrontMatterClassifierResult, 
+  SourcePage 
+} from '$lib/index';
+import { pageMap, classifiedSet, siteConfig, getPage } from '$lib/index';
 
 export const get = async () => {
-	let config = await siteConfig(); // get config.
-	let pages = await sourcePages(); // get all pages
+	const map = await pageMap();
+	const posts: DirectoryClassifierResult = await classifiedSet('post');
+	const tags: FrontMatterClassifierResult = await classifiedSet('tag');
+  	const title = siteConfig.title;
+  	const testPage = await getPage("/_posts/first-post");
 
 	return {
 		status: 200,
 		body: {
-			config,
-			pages
+			title,
+			map,
+			posts,
+			tags
 		}
 	};
 };
+
 ```
 
-npm run dev
+- Finally, run develop server & browsing http://localhost:3000/test.json
 
-browsering http://localhost:3000/test.json
