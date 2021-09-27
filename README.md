@@ -79,7 +79,7 @@ export const get = async () => {
 	const map = await pageMap();
 	const posts: DirectoryClassifierResult = await classifiedSet('post');
 	const tags: FrontMatterClassifierResult = await classifiedSet('tag');
-  	const title = siteConfig.title;
+  	const title = (await siteConfig()).title
   	const testPage = await getPage("/_posts/first-post");
 
 	return {
