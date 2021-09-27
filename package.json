@@ -1,6 +1,7 @@
 {
 	"name": "sveltekit-svxutils",
 	"version": "1.0.0",
+	"description": "Sveltekit markdown provider & classification utilities",
 	"scripts": {
 		"dev": "svelte-kit dev",
 		"build": "svelte-kit build",
@@ -31,5 +32,18 @@
 	"type": "module",
 	"dependencies": {
 		"mdsvex": "^0.9.8"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/saweima12/sveltekit-svxutils"
+	},
+	"license": "MIT",
+	"author": "Saweima <saweima12@gmail.com>",
+	"keywords": [
+		"svelte",
+		"markdown",
+		"mdx",
+		"blog",
+		"kit"
+	]
 }

@@ -1,11 +1,12 @@
 # SvxUtils
 
-An easily & useful content provider for SvelteKit. use [MDsveX](https://github.com/pngwn/MDsveX) as preproocess.
+An easily & useful markodwn content provider for SvelteKit. use [MDsveX](https://github.com/pngwn/MDsveX) as preproocess.
+
 
 ## Features
 
-- markdown source provide
-- classification
+- Markdown source provide
+- Classification
 
 ## Install
 
