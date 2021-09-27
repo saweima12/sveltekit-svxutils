@@ -1,7 +1,7 @@
 ---
 title: directioryClassifierTestA
 summary: directioryClassifierTestA's summary.
-tags: 
+tags:
   - tagA
   - tagC
 ---

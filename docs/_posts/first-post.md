@@ -4,4 +4,3 @@ summary: test summary
 ---
 
 This is test post.
-
