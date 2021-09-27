@@ -6,7 +6,7 @@ import type {
 import { pageMap, classifiedSet, siteConfig, getPage } from '$lib/index';
 
 export const get = async () => {
-  const title = siteConfig.title;
+  const title = (await siteConfig()).title;
 	const map = await pageMap();
 	const posts: DirectoryClassifierResult = await classifiedSet('post');
 	const tags: FrontMatterClassifierResult = await classifiedSet('tag');
