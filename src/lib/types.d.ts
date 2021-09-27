@@ -7,10 +7,8 @@ export interface Locals {
 }
 
 export interface SourcePage {
-  frontMatter: Record<string, any>,
-  sourcePath: PathLike | string,
-  indexPath: PathLike | string,
-  render: Function
+	frontMatter: Record<string, any>;
+	sourcePath: PathLike | string;
+	indexPath: PathLike | string;
+	render: Function;
 }
-
-
