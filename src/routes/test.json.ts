@@ -1,26 +1,26 @@
-import type { 
-  DirectoryClassifierResult, 
-  FrontMatterClassifierResult, 
-  SourcePage 
+import type {
+  DirectoryClassifierResult,
+  FrontMatterClassifierResult,
+  SourcePage
 } from '$lib/index';
 import { pageMap, classifiedSet, siteConfig, getPage } from '$lib/index';
 
 export const get = async () => {
   const title = (await siteConfig()).title;
-	const map = await pageMap();
-	const posts: DirectoryClassifierResult = await classifiedSet('post');
-	const tags: FrontMatterClassifierResult = await classifiedSet('tag');
-  const testPage: SourcePage = await getPage("/_posts/first-post");
-  const pageContent = testPage.render()
+  const map = await pageMap();
+  const posts: DirectoryClassifierResult = await classifiedSet('post');
+  const tags: FrontMatterClassifierResult = await classifiedSet('tag');
+  const testPage: SourcePage = await getPage('/_posts/first-post');
+  const pageContent = testPage.render();
 
-	return {
-		status: 200,
-		body: {
+  return {
+    status: 200,
+    body: {
       title,
-			map,
-			posts,
-			tags,
+      map,
+      posts,
+      tags,
       pageContent
-		}
-	};
+    }
+  };
 };

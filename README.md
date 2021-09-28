@@ -2,7 +2,6 @@
 
 An easily & useful markodwn content provider for SvelteKit. use [MDsveX](https://github.com/pngwn/MDsveX) as preproocess.
 
-
 ## Features
 
 - Markdown source provide
@@ -26,16 +25,16 @@ import preprocess from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	extensions: ['.svelte', ...mdsvexConfig.extensions],
+  extensions: ['.svelte', ...mdsvexConfig.extensions],
 
-	// Consult https://github.com/sveltejs/svelte-preprocess
-	// for more information about preprocessors
-	preprocess: [preprocess({}), mdsvex(mdsvexConfig)],
+  // Consult https://github.com/sveltejs/svelte-preprocess
+  // for more information about preprocessors
+  preprocess: [preprocess({}), mdsvex(mdsvexConfig)],
 
-	kit: {
-		// hydrate the <div id="svelte"> element in src/app.html
-		target: '#svelte'
-	}
+  kit: {
+    // hydrate the <div id="svelte"> element in src/app.html
+    target: '#svelte'
+  }
 };
 export default config;
 ```
@@ -55,12 +54,12 @@ export default config;
 
 ```js
 const config = {
-	title: 'BlogSite',
+  title: 'BlogSite',
 
-	classifier: [
-		{ id: 'post', params: { path: '/_posts/' }, type: 'directory' },
-		{ id: 'tag', params: { keys: ['tag', 'tags'] }, type: 'frontmatter' }
-	]
+  classifier: [
+    { id: 'post', params: { path: '/_posts/' }, type: 'directory' },
+    { id: 'tag', params: { keys: ['tag', 'tags'] }, type: 'frontmatter' }
+  ]
 };
 export default config;
 ```
@@ -68,32 +67,30 @@ export default config;
 - Add an endpoint to /src/routes/test.json.ts
 
 ```ts
-import type { 
-  DirectoryClassifierResult, 
-  FrontMatterClassifierResult, 
-  SourcePage 
+import type {
+  DirectoryClassifierResult,
+  FrontMatterClassifierResult,
+  SourcePage
 } from '$lib/index';
 import { pageMap, classifiedSet, siteConfig, getPage } from '$lib/index';
 
 export const get = async () => {
-	const map = await pageMap();
-	const posts: DirectoryClassifierResult = await classifiedSet('post');
-	const tags: FrontMatterClassifierResult = await classifiedSet('tag');
-  	const title = (await siteConfig()).title
-  	const testPage = await getPage("/_posts/first-post");
+  const map = await pageMap();
+  const posts: DirectoryClassifierResult = await classifiedSet('post');
+  const tags: FrontMatterClassifierResult = await classifiedSet('tag');
+  const title = (await siteConfig()).title;
+  const testPage = await getPage('/_posts/first-post');
 
-	return {
-		status: 200,
-		body: {
-			title,
-			map,
-			posts,
-			tags
-		}
-	};
+  return {
+    status: 200,
+    body: {
+      title,
+      map,
+      posts,
+      tags
+    }
+  };
 };
-
 ```
 
 - Finally, run develop server & browsing http://localhost:3000/test.json
-
