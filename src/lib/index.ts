@@ -70,7 +70,8 @@ export const getPage = async (indexPath: string): Promise<SourcePage> => {
 
   if (page) return page;
 
-  throw new Error(`path ${indexPath} not found.`);
+  let avaliablePath = Object.keys(pages).join('\r\t');
+  throw new Error(`path ${indexPath} is not found. available path:\r\t${avaliablePath} \n`);
 };
 
 export type { DirectoryClassifierResult, FrontMatterClassifierResult } from './classifier';
