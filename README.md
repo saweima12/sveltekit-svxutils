@@ -72,27 +72,28 @@ import type {
   DirectoryClassifierResult, 
   FrontMatterClassifierResult, 
   SourcePage 
-} from '$lib/index';
-import { pageMap, classifiedSet, siteConfig, getPage } from '$lib/index';
+} from 'sveltekit-svxutils';
+import { pageMap, classifiedSet, siteConfig, getPage } from 'sveltekit-svxutils';
 
 export const get = async () => {
+  const title = (await siteConfig()).title;
 	const map = await pageMap();
 	const posts: DirectoryClassifierResult = await classifiedSet('post');
 	const tags: FrontMatterClassifierResult = await classifiedSet('tag');
-  	const title = (await siteConfig()).title
-  	const testPage = await getPage("/_posts/first-post");
+  const testPage: SourcePage = await getPage("/_posts/first-post");
+  const pageContent = testPage.render()
 
 	return {
 		status: 200,
 		body: {
-			title,
+      title,
 			map,
 			posts,
-			tags
+			tags,
+      pageContent
 		}
 	};
 };
-
 ```
 
 - Finally, run develop server & browsing http://localhost:3000/test.json
