@@ -2,7 +2,6 @@
 
 An easily & useful markodwn content provider for SvelteKit. use [MDsveX](https://github.com/pngwn/MDsveX) as preproocess.
 
-
 ## Features
 
 - Markdown source provide
@@ -97,4 +96,3 @@ export const get = async () => {
 ```
 
 - Finally, run develop server & browsing http://localhost:3000/test.json
-

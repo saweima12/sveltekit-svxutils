@@ -3,12 +3,12 @@
  * inside `global.d.ts` and removing `export` keyword
  */
 export interface Locals {
-	userid: string;
+  userid: string;
 }
 
 export interface SourcePage {
-	frontMatter: Record<string, any>;
-	sourcePath: PathLike | string;
-	indexPath: PathLike | string;
-	render: Function;
+  frontMatter: Record<string, any>;
+  sourcePath: PathLike | string;
+  indexPath: PathLike | string;
+  render: Function;
 }
