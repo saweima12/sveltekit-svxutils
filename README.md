@@ -26,16 +26,16 @@ import preprocess from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	extensions: ['.svelte', ...mdsvexConfig.extensions],
+  extensions: ['.svelte', ...mdsvexConfig.extensions],
 
-	// Consult https://github.com/sveltejs/svelte-preprocess
-	// for more information about preprocessors
-	preprocess: [preprocess({}), mdsvex(mdsvexConfig)],
+  // Consult https://github.com/sveltejs/svelte-preprocess
+  // for more information about preprocessors
+  preprocess: [preprocess({}), mdsvex(mdsvexConfig)],
 
-	kit: {
-		// hydrate the <div id="svelte"> element in src/app.html
-		target: '#svelte'
-	}
+  kit: {
+    // hydrate the <div id="svelte"> element in src/app.html
+    target: '#svelte'
+  }
 };
 export default config;
 ```
@@ -55,12 +55,12 @@ export default config;
 
 ```js
 const config = {
-	title: 'BlogSite',
+  title: 'BlogSite',
 
-	classifier: [
-		{ id: 'post', params: { path: '/_posts/' }, type: 'directory' },
-		{ id: 'tag', params: { keys: ['tag', 'tags'] }, type: 'frontmatter' }
-	]
+  classifier: [
+    { id: 'post', params: { path: '/_posts/' }, type: 'directory' },
+    { id: 'tag', params: { keys: ['tag', 'tags'] }, type: 'frontmatter' }
+  ]
 };
 export default config;
 ```
@@ -77,22 +77,22 @@ import { pageMap, classifiedSet, siteConfig, getPage } from 'sveltekit-svxutils'
 
 export const get = async () => {
   const title = (await siteConfig()).title;
-	const map = await pageMap();
-	const posts: DirectoryClassifierResult = await classifiedSet('post');
-	const tags: FrontMatterClassifierResult = await classifiedSet('tag');
+  const map = await pageMap();
+  const posts: DirectoryClassifierResult = await classifiedSet('post');
+  const tags: FrontMatterClassifierResult = await classifiedSet('tag');
   const testPage: SourcePage = await getPage("/_posts/first-post");
   const pageContent = testPage.render()
 
-	return {
-		status: 200,
-		body: {
-      title,
-			map,
-			posts,
-			tags,
-      pageContent
-		}
-	};
+  return {
+    status: 200,
+    body: {
+     title,
+     map,
+     posts,
+     tags,
+     pageContent
+  }
+};
 };
 ```
 
