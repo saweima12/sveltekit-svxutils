@@ -27,7 +27,6 @@ export interface ClassifyHandle {
 export const classifyPages: ClassifyHandle = async (input) => {
   let _classifiedMap: Record<string, any> = {};
   const { classifierList, pages } = input;
-  console.log(classifierList);
   classifierList.map(async (_classifierOption: ClassifierOptions) => {
     let _classifier: ClassifierHandle = undefined;
 
