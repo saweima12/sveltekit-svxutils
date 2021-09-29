@@ -100,3 +100,11 @@ const _initializeMap = async () => {
 
 export type { DirectoryClassifierResult, FrontMatterClassifierResult } from './classifier';
 export type { SourcePage };
+
+export default {
+  siteConfig,
+  pageMap,
+  slugMap,
+  classifiedSet,
+  getPage
+}
