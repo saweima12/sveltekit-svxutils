@@ -1,6 +1,6 @@
 {
   "name": "sveltekit-svxutils",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Sveltekit markdown provider & classification utilities",
   "scripts": {
     "dev": "svelte-kit dev",
