@@ -11,11 +11,12 @@ export const get: RequestHandler = async () => {
     return date.getFullYear() == 2021 && date.getMonth() + 1 == 9 && date.getDate() == 18;
   });
 
+
   return {
     status: 200,
     body: {
       normalPage,
-      matchPage
+      matchPage,
     }
   };
 };

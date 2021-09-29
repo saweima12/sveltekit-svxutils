@@ -10,6 +10,6 @@ export interface SourcePage extends Record<string, any> {
   frontMatter: Record<string, any>;
   sourcePath: PathLike | string;
   indexPath: PathLike | string;
-  render: Function;
+  render: (() => Record<string, any>) | any;
   slugKey: string;
 }
