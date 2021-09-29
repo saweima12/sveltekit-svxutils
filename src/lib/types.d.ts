@@ -11,4 +11,5 @@ export interface SourcePage extends Record<string, any> {
   sourcePath: PathLike | string;
   indexPath: PathLike | string;
   render: Function;
+  slugKey: string;
 }

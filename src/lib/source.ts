@@ -30,9 +30,9 @@ const _loadSources = async () => {
       let indexPath = sourcePath.replace(/^\/docs/, '').replace(/(?:\.([^.]+))?$/, '');
       indexPath = frontmatter.indexPath ? frontmatter.indexPath : indexPath;
       // process slugPath.
-      let { slugName, slugDate } = _getSlugParams(indexPath);
+      let { slugKey, slugDate } = _getSlugParams(indexPath);
       // if scheme like: 2021-09-30-foo-bar, extract slug.
-      if (!(slugName in slugMap)) slugMap[slugName] = [];
+      if (!(slugKey in slugMap)) slugMap[slugKey] = [];
 
       // attach created datetime & get indexPath.
       frontmatter.created = frontmatter.created
@@ -45,11 +45,12 @@ const _loadSources = async () => {
         frontMatter: frontmatter,
         sourcePath: sourcePath,
         indexPath: indexPath,
-        render: pageObj.default.render
+        render: pageObj.default.render,
+        slugKey: slugKey
       };
       // add to pathMap & slugMap
       pathMap[indexPath] = pageStruct;
-      slugMap[slugName].push(pageStruct);
+      slugMap[slugKey].push(pageStruct);
       return pageStruct;
     })
   );
@@ -65,8 +66,8 @@ const _getSlugParams = (indexPath: string) => {
   const regex = /([0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2})\-(.+)/;
   let match = baseName.match(regex);
 
-  if (match) return { slugName: match[2], slugDate: new Date(match[1]) };
-  return { slugName: baseName, slugDate: undefined };
+  if (match) return { slugKey: match[2], slugDate: new Date(match[1]) };
+  return { slugKey: baseName, slugDate: undefined };
 };
 
 const _fsStatAsync = async (filePath: string): Promise<Record<string, any>> => {

@@ -78,7 +78,7 @@ export const getPage = async (
   let slugPages = _slugMap[indexKey];
 
   if (slugPages) {
-    return slugMatchFunc && slugPages.length > 1
+    return slugMatchFunc 
       ? slugPages.find((page) => slugMatchFunc(page))
       : slugPages[0];
   }
