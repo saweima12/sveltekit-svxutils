@@ -3,7 +3,6 @@ import { classifyPages } from './classifier';
 import type { SourcePage } from './types';
 
 let _config: Record<string, any> = undefined;
-
 /**
  * Get siteConfig
  *
@@ -20,17 +19,30 @@ export const siteConfig = async (): Promise<Record<string, any>> => {
 };
 
 // cache sourcepages.
-let _sources: Record<string, SourcePage> = undefined;
+let _pathMap: Record<string, SourcePage> = undefined;
 /**
- * Get All .md | .svx page from /docs/**
+ * Get All source page, index by indexPath
  *
  * @async
  * @return {Promise<Record<string, SourcePage>>} key: IndexPath value: SourcePage
  */
 export const pageMap = async (): Promise<Record<string, SourcePage>> => {
-  if (!_sources) _sources = await loadSourcePages();
+  if (!_pathMap) await _initializeMap();
 
-  return _sources;
+  return _pathMap;
+};
+
+let _slugMap: Record<string, Array<SourcePage>> = undefined;
+/**
+ * Get All source page, index by slugName
+ *
+ * @async
+ * @return {Promise<Record<string, Array<SourcePage>>>}
+ */
+export const slugMap = async (): Promise<Record<string, Array<SourcePage>>> => {
+  if (!_slugMap) await _initializeMap();
+
+  return _slugMap;
 };
 
 // cache classified result.
@@ -56,24 +68,35 @@ export const classifiedSet = async (classifierId: string): Promise<any> => {
   throw new Error(`classifierId: ${classifierId} not found.`);
 };
 
-/**
- * Get page by indexPath
- *
- * @async
- * @param {string} indexPath
- * @throws {Error}
- * @return {Promise<SourcePage>}
- */
-export const getPage = async (indexPath: string): Promise<SourcePage> => {
-  const pages = await pageMap();
-  const page = pages[indexPath];
+export const getPage = async (
+  indexKey: string,
+  slugMatchFunc?: (page: SourcePage) => boolean
+): Promise<SourcePage> => {
+  let page = undefined;
+  // try get page from slugMap
+  const _slugMap = await slugMap();
+  let slugPages = _slugMap[indexKey];
 
+  if (slugPages) {
+    return slugMatchFunc && slugPages.length > 1
+      ? slugPages.find((page) => slugMatchFunc(page))
+      : slugPages[0];
+  }
+  // try get page from pageMap
+  const _pathMap = await pageMap();
+  page = _pathMap[indexKey];
   if (page) return page;
 
-  let avaliablePath = Object.keys(pages).join('\r\t');
-  throw new Error(`path ${indexPath} is not found. available path:\r\t${avaliablePath} \n`);
+  // throw error message.
+  let avaliablePath = Object.keys(_pathMap).join('\r\t');
+  throw new Error(`path ${indexKey} is not found. available path:\r\t${avaliablePath} \n`);
+};
+
+const _initializeMap = async () => {
+  let { pathMap, slugMap } = await loadSourcePages();
+  _pathMap = pathMap;
+  _slugMap = slugMap;
 };
 
 export type { DirectoryClassifierResult, FrontMatterClassifierResult } from './classifier';
-
 export type { SourcePage };
