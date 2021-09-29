@@ -3,10 +3,10 @@ import { getPage, SourcePage } from '$lib/index';
 
 export const get: RequestHandler = async () => {
   // get by slugName
-  let normalPage = await getPage('first-post');
+  let normalPage = await getPage('note');
 
   // get by slugName & use match.
-  let matchPage = await getPage('first-post', (page: SourcePage) => {
+  let matchPage = await getPage('note', (page: SourcePage) => {
     let date = new Date(page.frontMatter.created);
     return date.getFullYear() == 2021 && date.getMonth() + 1 == 9 && date.getDate() == 18;
   });
