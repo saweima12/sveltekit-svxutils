@@ -67,10 +67,10 @@ export default config;
 - Add an endpoint to /src/routes/test.json.ts
 
 ```ts
-import type { 
-  DirectoryClassifierResult, 
-  FrontMatterClassifierResult, 
-  SourcePage 
+import type {
+  DirectoryClassifierResult,
+  FrontMatterClassifierResult,
+  SourcePage
 } from 'sveltekit-svxutils';
 import { pageMap, classifiedSet, siteConfig, getPage } from 'sveltekit-svxutils';
 
@@ -79,19 +79,19 @@ export const get = async () => {
   const map = await pageMap();
   const posts: DirectoryClassifierResult = await classifiedSet('post');
   const tags: FrontMatterClassifierResult = await classifiedSet('tag');
-  const testPage: SourcePage = await getPage("/_posts/first-post");
-  const pageContent = testPage.render()
+  const testPage: SourcePage = await getPage('/_posts/first-post');
+  const pageContent = testPage.render();
 
   return {
     status: 200,
     body: {
-     title,
-     map,
-     posts,
-     tags,
-     pageContent
-  }
-};
+      title,
+      map,
+      posts,
+      tags,
+      pageContent
+    }
+  };
 };
 ```
 

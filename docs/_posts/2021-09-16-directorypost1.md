@@ -4,7 +4,7 @@ summary: directioryClassifierTestA's summary.
 tags:
   - tagA
   - tagC
-indexPath: /permalink
+indexPath: /_posts/directorypost1
 ---
 
-context
+0916 - context

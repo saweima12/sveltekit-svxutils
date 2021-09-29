@@ -1,26 +1,20 @@
-import type {
-  DirectoryClassifierResult,
-  FrontMatterClassifierResult,
-  SourcePage
-} from '$lib/index';
-import { pageMap, classifiedSet, siteConfig, getPage } from '$lib/index';
+import type { DirectoryClassifierResult, FrontMatterClassifierResult } from '$lib/index';
+import { pageMap, slugMap, classifiedSet } from '$lib/index';
 
 export const get = async () => {
-  const title = (await siteConfig()).title;
-  const map = await pageMap();
+  const _pathMap = await pageMap();
+  const _slugMap = await slugMap();
+
   const posts: DirectoryClassifierResult = await classifiedSet('post');
   const tags: FrontMatterClassifierResult = await classifiedSet('tag');
-  const testPage: SourcePage = await getPage('/_posts/first-post');
-  const pageContent = testPage.render();
 
   return {
     status: 200,
     body: {
-      title,
-      map,
+      pathMap: _pathMap,
+      slugMap: _slugMap,
       posts,
-      tags,
-      pageContent
+      tags
     }
   };
 };
