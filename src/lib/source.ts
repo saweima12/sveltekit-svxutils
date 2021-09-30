@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import type { SourcePage } from './types';
+import type { SourcePage, SourcePageContext } from './types';
 
 export interface SourcePageCollection {
   pathMap: Record<string, SourcePage>;
@@ -11,6 +11,7 @@ export interface SourcePageCollection {
 export const loadSourcePages = async (): Promise<SourcePageCollection> => {
   return await _loadSources();
 };
+
 
 // loading: All md | svx from /docs/*
 const _loadSources = async () => {
@@ -33,19 +34,19 @@ const _loadSources = async () => {
       let { slugKey, slugDate } = _getSlugParams(indexPath);
       // if scheme like: 2021-09-30-foo-bar, extract slug.
       if (!(slugKey in slugMap)) slugMap[slugKey] = [];
-
       // attach created datetime & get indexPath.
       frontmatter.created = frontmatter.created
         ? frontmatter.created
         : slugDate
         ? slugDate
         : sourceStat.birthtime;
+      
       // generate struct.
       const pageStruct = {
         frontMatter: frontmatter,
         sourcePath: sourcePath,
         indexPath: indexPath,
-        render: pageObj.default.render,
+        render: _attachRender(pageObj.default.render),
         slugKey: slugKey
       };
       // add to pathMap & slugMap
@@ -69,6 +70,19 @@ const _getSlugParams = (indexPath: string) => {
   if (match) return { slugKey: match[2], slugDate: new Date(match[1]) };
   return { slugKey: baseName, slugDate: undefined };
 };
+
+
+
+const _attachRender = ( renderFunc : Function )  => {
+  return () : SourcePageContext => {
+    const context = renderFunc();
+    return {
+      ...context,
+      style: `<style>${context.css.code}</style>`
+    }
+
+  }
+}
 
 const _fsStatAsync = async (filePath: string): Promise<Record<string, any>> => {
   return await new Promise((resolve, reject) => {
