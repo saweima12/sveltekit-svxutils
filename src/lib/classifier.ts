@@ -2,10 +2,6 @@ import type { SourcePage } from './types';
 
 type ClassifierType = 'directory' | 'frontmatter' | ClassifierHandle;
 
-interface ClassifierHandleResult<Result = Record<string, any>> {
-  (): Result;
-}
-
 export interface ClassifierOptions<Locals = Record<string, any>> {
   id: string;
   type: ClassifierType;
@@ -14,7 +10,7 @@ export interface ClassifierOptions<Locals = Record<string, any>> {
 
 export interface ClassifierHandle<Locals = Record<string, any>, Result = Record<string, any>> {
   (input: { options: ClassifierOptions<Locals>; pages: Array<SourcePage> | any }): Promise<
-    ClassifierHandleResult<Result>
+    Result
   >;
 }
 
@@ -67,7 +63,7 @@ const DirectoryClassifierHandle: ClassifierHandle<
     _classifiedPages.push(page);
   });
 
-  return () => ({ pages: _classifiedPages });
+  return { pages: _classifiedPages };
 };
 
 interface FrontMatterClassifierParams {
@@ -100,7 +96,7 @@ const FrontMatterClassifierHandle: ClassifierHandle<
       }
     });
   });
-  return () => _classifiedPages;
+  return _classifiedPages;
 };
 
 const _classifierIndexAdd = (map: Record<string, any> | Object, key: string, item: any) => {

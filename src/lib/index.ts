@@ -63,7 +63,7 @@ export const classifiedSet = async (classifierId: string): Promise<any> => {
   }
 
   const _classifiedSet = _classifiedCollection[classifierId];
-  if (_classifiedSet) return _classifiedSet();
+  if (_classifiedSet) return _classifiedSet;
 
   throw new Error(`classifierId: ${classifierId} not found.`);
 };
