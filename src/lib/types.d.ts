@@ -13,3 +13,10 @@ export interface SourcePage extends Record<string, any> {
   render: (() => Record<string, any>) | any;
   slugKey: string;
 }
+
+export interface SourcePageContext extends Record<string, any> {
+  html?: string;
+  header?: string;
+  css?: Record<string, any>;
+  style: string;
+}
