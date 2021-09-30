@@ -1,6 +1,6 @@
 import { loadSourcePages } from './source';
 import { classifyPages } from './classifier';
-import type { SourcePage } from './types';
+import type { SourcePage, SourcePageContext } from './types';
 
 let _config: Record<string, any> = undefined;
 /**
@@ -11,9 +11,9 @@ let _config: Record<string, any> = undefined;
  */
 export const siteConfig = async (): Promise<Record<string, any>> => {
   let glob = import.meta.glob('/site.config.js');
-
+  if (!Object.keys(glob).length) glob = import.meta.glob('/src/site.config.js')
   if (!Object.keys(glob).length) throw new Error('site.config.js not found.');
-  let loadConfig = await glob['/site.config.js']();
+  let loadConfig = await glob[Object.keys(glob)[0]]();
   _config = loadConfig.default;
   return _config;
 };
@@ -99,7 +99,7 @@ const _initializeMap = async () => {
 };
 
 export type { DirectoryClassifierResult, FrontMatterClassifierResult } from './classifier';
-export type { SourcePage };
+export type { SourcePage, SourcePageContext };
 
 export default {
   siteConfig,
