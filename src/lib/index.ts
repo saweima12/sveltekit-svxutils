@@ -96,7 +96,7 @@ export const getPage = async (
 let _permalinks: Record<string, string> = undefined
 export const getParamalink = async(
   schemaId: string,
-  params: Record<string, string>
+  params: Record<string, any>
 ) => {
   if (!_permalinks) _permalinks = (await siteConfig()).permalinks || {};
   // get schema from config.

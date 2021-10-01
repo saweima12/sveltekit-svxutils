@@ -1,4 +1,4 @@
-export const format = (format: string, params: Record<string, string>) => {
+export const format = (format: string, params: Record<string, any>) => {
   let result = format;
   Object.entries(params).map(([key, value]) => {
     let regex = new RegExp(`{${key}}`);
