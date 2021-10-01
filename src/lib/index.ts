@@ -1,6 +1,7 @@
 import { loadSourcePages } from './source';
 import { classifyPages } from './classifier';
 import type { SourcePage, SourcePageContext } from './types';
+import helper from './helper';
 
 let _config: Record<string, any> = undefined;
 /**
@@ -91,6 +92,20 @@ export const getPage = async (
   let avaliablePath = Object.keys(_pathMap).join('\r\t');
   throw new Error(`path ${indexKey} is not found. available path:\r\t${avaliablePath} \n`);
 };
+
+let _permalinks: Record<string, string> = undefined
+export const getParamalink = async(
+  schemaId: string,
+  params: Record<string, string>
+) => {
+  if (!_permalinks) _permalinks = (await siteConfig()).permalinks || {};
+  // get schema from config.
+  let _schema = _permalinks[schemaId];
+  // if not found, thorw error.
+  if (!_schema) throw new Error(`permalinks schemaId ${schemaId} not found.`)
+  
+  return helper.format(_schema, params)
+}
 
 const _initializeMap = async () => {
   let { pathMap, slugMap } = await loadSourcePages();
