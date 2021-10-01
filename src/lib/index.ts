@@ -93,20 +93,6 @@ export const getPage = async (
   throw new Error(`path ${indexKey} is not found. available path:\r\t${avaliablePath} \n`);
 };
 
-let _permalinks: Record<string, string> = undefined
-export const getParamalink = async(
-  schemaId: string,
-  params: Record<string, any>
-) => {
-  if (!_permalinks) _permalinks = (await siteConfig()).permalinks || {};
-  // get schema from config.
-  let _schema = _permalinks[schemaId];
-  // if not found, thorw error.
-  if (!_schema) throw new Error(`permalinks schemaId ${schemaId} not found.`)
-  
-  return helper.format(_schema, params)
-}
-
 const _initializeMap = async () => {
   let { pathMap, slugMap } = await loadSourcePages();
   _pathMap = pathMap;
