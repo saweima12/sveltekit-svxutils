@@ -70,7 +70,7 @@ interface FrontMatterClassifierParams {
   keys: Array<string>;
 }
 
-export type FrontMatterClassifierResult = Record<string, Record<string, SourcePage>>;
+export type FrontMatterClassifierResult = Record<string, Array<SourcePage>>;
 
 const FrontMatterClassifierHandle: ClassifierHandle<
   FrontMatterClassifierParams,

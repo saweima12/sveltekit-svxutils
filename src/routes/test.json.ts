@@ -1,5 +1,5 @@
 import type { DirectoryClassifierResult, FrontMatterClassifierResult } from '$lib/index';
-import { pageMap, slugMap, classifiedSet, getParamalink } from '$lib/index';
+import { pageMap, slugMap, classifiedSet } from '$lib/index';
 
 export const get = async () => {
   const _pathMap = await pageMap();
@@ -7,7 +7,7 @@ export const get = async () => {
 
   const posts: DirectoryClassifierResult = await classifiedSet('post');
   const tags: FrontMatterClassifierResult = await classifiedSet('tag');
-  
+ 
   return {
     status: 200,
     body: {
