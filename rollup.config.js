@@ -14,16 +14,16 @@ export default [
     ],
     input: 'src/main.ts',
     output: [
-      { file: pkg.module, format: 'es', sourcemap: false },
-      // { file: pkg.main, format: 'cjs', sourcemap: false }
+      // { file: pkg.module, format: 'es', sourcemap: false },
+      { file: pkg.main, format: 'cjs', sourcemap: false }
     ]
   },
   {
     plugins: [dts()],
     input: 'src/main.ts',
     output: [
-      { file: 'dist/main.es.d.ts', format: 'es' },
-      // { file: 'dist/main.cjs.d.ts', format: 'cjs' }
+      // { file: 'dist/main.es.d.ts', format: 'es' },
+      { file: 'dist/main.cjs.d.ts', format: 'cjs' }
     ]
   }
 ]
