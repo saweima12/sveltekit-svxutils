@@ -1,39 +1,39 @@
-import { loadSourcePages } from './source';
+import { loadConfig, loadSourcePages } from './source';
 import { classifyPages } from './classifier';
-import type { SourcePage, SourcePageContext } from './types';
-import helper from './helper';
+import type { SourcePage, SourcePageContext, SourcePageCollection } from './types';
+
 
 let _config: Record<string, any> = undefined;
 /**
- * Get siteConfig
- *
+ * Get siteConfig 
+ * 
  * @async
  * @return {Promise<Record<string, any>>} custom config.
  */
 export const siteConfig = async (): Promise<Record<string, any>> => {
-  let glob = import.meta.glob('/site.config.js');
-  if (!Object.keys(glob).length) glob = import.meta.glob('/src/site.config.js')
-  if (!Object.keys(glob).length) throw new Error('site.config.js not found.');
-  let loadConfig = await glob[Object.keys(glob)[0]]();
-  _config = loadConfig.default;
+  
+  if (!_config) {
+    const configPath = "/src/site.config.js";
+    _config = await loadConfig(configPath);
+  }
   return _config;
 };
 
 // cache sourcepages.
-let _pathMap: Record<string, SourcePage> = undefined;
+let _pageMap: SourcePageCollection = null;
+
 /**
  * Get All source page, index by indexPath
  *
  * @async
  * @return {Promise<Record<string, SourcePage>>} key: IndexPath value: SourcePage
  */
-export const pageMap = async (): Promise<Record<string, SourcePage>> => {
-  if (!_pathMap) await _initializeMap();
+export const pathMap = async (): Promise<Record<string, SourcePage>> => {
+  if (!_pageMap) await initializeMap();
 
-  return _pathMap;
+  return _pageMap.pathMap;
 };
 
-let _slugMap: Record<string, Array<SourcePage>> = undefined;
 /**
  * Get All source page, index by slugName
  *
@@ -41,9 +41,9 @@ let _slugMap: Record<string, Array<SourcePage>> = undefined;
  * @return {Promise<Record<string, Array<SourcePage>>>}
  */
 export const slugMap = async (): Promise<Record<string, Array<SourcePage>>> => {
-  if (!_slugMap) await _initializeMap();
+  if (!_pageMap) await initializeMap();
 
-  return _slugMap;
+  return _pageMap.slugMap;
 };
 
 // cache classified result.
@@ -59,7 +59,7 @@ export const classifiedSet = async (classifierId: string): Promise<any> => {
   // classify all SourcePage.
   if (!_classifiedCollection) {
     const classifierList = (await siteConfig()).classifier || [];
-    const list: Array<SourcePage> = Object.values(await pageMap());
+    const list: Array<SourcePage> = Object.values(await pathMap());
     _classifiedCollection = await classifyPages({ classifierList: classifierList, pages: list });
   }
 
@@ -84,7 +84,7 @@ export const getPage = async (
       : slugPages[0];
   }
   // try get page from pageMap
-  const _pathMap = await pageMap();
+  const _pathMap = await pathMap();
   page = _pathMap[indexKey];
   if (page) return page;
 
@@ -93,10 +93,10 @@ export const getPage = async (
   throw new Error(`path ${indexKey} is not found. available path:\r\t${avaliablePath} \n`);
 };
 
-const _initializeMap = async () => {
-  let { pathMap, slugMap } = await loadSourcePages();
-  _pathMap = pathMap;
-  _slugMap = slugMap;
+
+export const initializeMap = async () => {
+  const sourceDir = "/docs";
+  _pageMap = await loadSourcePages(sourceDir);
 };
 
 export type { DirectoryClassifierResult, FrontMatterClassifierResult } from './classifier';
@@ -104,7 +104,7 @@ export type { SourcePage, SourcePageContext };
 
 export default {
   siteConfig,
-  pageMap,
+  pathMap,
   slugMap,
   classifiedSet,
   getPage

@@ -1,20 +1,23 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
-import type { SourcePage, SourcePageContext } from './types';
-
-export interface SourcePageCollection {
-  pathMap: Record<string, SourcePage>;
-  slugMap: Record<string, Array<SourcePage>>;
-}
+import type { SourcePage, SourcePageContext, SourcePageCollection } from './types';
+import { getAbsoultPath } from './internal';
 
 // Get: All Pages by source.
-export const loadSourcePages = async (): Promise<SourcePageCollection> => {
-  return await _loadSources();
+export const loadSourcePages = async (sourceDir: string): Promise<SourcePageCollection> => {
+  return await _loadSources(sourceDir);
 };
+
+// Get Config.
+export const loadConfig = async (configPath?: string): Promise<Record<string, any>> => {
+  let path = getAbsoultPath(configPath);
+  let _loadConfig = await import(path);
+  return _loadConfig.default;
+}
 
 
 // loading: All md | svx from /docs/*
-const _loadSources = async () => {
+const _loadSources = async (sourceDir: string) => {
   console.log('::: Loading docs ::: ');
   // loading source by vite & fast-glob.
   let sources = import.meta.glob('/docs/**/*.+(md|svx)');
@@ -25,13 +28,13 @@ const _loadSources = async () => {
       let pageObj = await pageAsync(); // get page data by lazyloading.
       // get file path & created datetime.
       let fullPath = path.join(process.cwd(), sourcePath);
-      let sourceStat = await _fsStatAsync(fullPath);
+      let sourceStat = await fs.stat(fullPath);
       let frontmatter = pageObj.metadata || {};
       // process indexPath & support customize indexPath by frontmatter.
       let indexPath = sourcePath.replace(/^\/docs/, '').replace(/(?:\.([^.]+))?$/, '');
       indexPath = frontmatter.indexPath ? frontmatter.indexPath : indexPath;
       // process slugPath.
-      let { slugKey, slugDate } = _getSlugParams(indexPath);
+      let { slugKey, slugDate } = getSlugParams(indexPath);
       // if scheme like: 2021-09-30-foo-bar, extract slug.
       if (!(slugKey in slugMap)) slugMap[slugKey] = [];
       // attach created datetime & get indexPath.
@@ -46,7 +49,7 @@ const _loadSources = async () => {
         frontMatter: frontmatter,
         sourcePath: sourcePath,
         indexPath: indexPath,
-        render: _attachRender(pageObj.default.render),
+        render: attachRender(pageObj.default.render),
         slugKey: slugKey
       };
       // add to pathMap & slugMap
@@ -61,7 +64,7 @@ const _loadSources = async () => {
   };
 };
 
-const _getSlugParams = (indexPath: string) => {
+const getSlugParams = (indexPath: string) => {
   let baseName = path.basename(indexPath);
   // match slug params
   const regex = /([0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2})\-(.+)/;
@@ -73,7 +76,7 @@ const _getSlugParams = (indexPath: string) => {
 
 
 
-const _attachRender = ( renderFunc : Function )  => {
+const attachRender = ( renderFunc : Function )  => {
   return () : SourcePageContext => {
     const context = renderFunc();
     return {
@@ -84,12 +87,3 @@ const _attachRender = ( renderFunc : Function )  => {
   }
 }
 
-const _fsStatAsync = async (filePath: string): Promise<Record<string, any>> => {
-  return await new Promise((resolve, reject) => {
-    fs.stat(filePath, (err, stat) => {
-      if (err) reject(err);
-
-      resolve(stat);
-    });
-  });
-};

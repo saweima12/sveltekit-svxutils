@@ -20,3 +20,9 @@ export interface SourcePageContext extends Record<string, any> {
   css?: Record<string, any>;
   style: string;
 }
+
+export interface SourcePageCollection {
+  pathMap: Record<string, SourcePage>;
+  slugMap: Record<string, Array<SourcePage>>;
+}
+

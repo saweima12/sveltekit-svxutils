@@ -3,40 +3,38 @@
   "version": "1.2.8",
   "description": "Sveltekit markdown provider & classification utilities",
   "scripts": {
-    "dev": "svelte-kit dev",
-    "build": "svelte-kit build",
-    "preview": "svelte-kit preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+    "build": "",
+    "test": "uvu -r tsm test test.ts$",
     "lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
     "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
     "publish": "bash ./scripts/publish.sh"
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "^1.0.0-next.20",
-    "@sveltejs/kit": "next",
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "@rollup/plugin-typescript": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
+    "changeset": "^0.2.6",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-svelte3": "^3.2.1",
     "prettier": "^2.4.1",
-    "prettier-plugin-svelte": "^2.4.0",
-    "svelte": "^3.42.6",
-    "svelte-check": "^2.2.6",
-    "svelte-preprocess": "^4.9.4",
-    "svelte2tsx": "^0.4.6",
+    "rollup": "^2.64.0",
+    "ts-node": "^10.4.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.3"
+    "typescript": "^4.4.3",
+    "uvu": "^0.5.3"
   },
-  "type": "module",
   "dependencies": {
-    "mdsvex": "^0.9.8"
+    "mdsvex": "^0.9.8",
+    "tsm": "^2.2.1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/saweima12/sveltekit-svxutils"
   },
+  "type": "module",
   "license": "MIT",
   "author": "Saweima <saweima12@gmail.com>",
   "keywords": [
