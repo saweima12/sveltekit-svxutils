@@ -39,7 +39,6 @@
     "type": "git",
     "url": "https://github.com/saweima12/sveltekit-svxutils"
   },
-  "type": "module",
   "license": "MIT",
   "author": "Saweima <saweima12@gmail.com>",
   "keywords": [
