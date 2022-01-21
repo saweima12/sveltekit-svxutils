@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from 'fs';
 import path from 'path';
 import type { SourcePage, SourcePageContext, SourcePageCollection } from './types';
 import { getAbsoultPath } from './internal';
@@ -19,19 +19,21 @@ export const loadConfig = async (configPath?: string): Promise<Record<string, an
 // loading: All md | svx from /docs/*
 const loadSources = async (sourceDir: string) => {
   console.log('::: Loading docs ::: ');
+  console.log(sourceDir)
   // loading source by vite & fast-glob.
-  let sources = import.meta.glob('/docs/**/*.+(md|svx)');
+  let sources = await getAvaliableSource(sourceDir);
   let pathMap: Record<string, SourcePage> = {};
   let slugMap: Record<string, Array<SourcePage>> = {};
   await Promise.all(
     Object.entries(sources).map(async ([sourcePath, pageAsync]) => {
       let pageObj = await pageAsync(); // get page data by lazyloading.
       // get file path & created datetime.
-      let fullPath = path.join(process.cwd(), sourcePath);
-      let sourceStat = await fs.stat(fullPath);
+      const fullPath = path.join(process.cwd(), sourcePath);
+      const fStat = await fs.promises.stat(fullPath);
       let frontmatter = pageObj.metadata || {};
       // process indexPath & support customize indexPath by frontmatter.
-      let indexPath = sourcePath.replace(/^\/docs/, '').replace(/(?:\.([^.]+))?$/, '');
+      const ptn = new RegExp(`^${sourceDir}`);
+      let indexPath = sourcePath.replace(ptn, '').replace(/(?:\.([^.]+))?$/, '');
       indexPath = frontmatter.indexPath ? frontmatter.indexPath : indexPath;
       // process slugPath.
       let { slugKey, slugDate } = getSlugParams(indexPath);
@@ -42,7 +44,7 @@ const loadSources = async (sourceDir: string) => {
         ? frontmatter.created
         : slugDate
         ? slugDate
-        : sourceStat.birthtime;
+        : fStat.birthtime;
       
       // generate struct.
       const pageStruct = {
@@ -67,28 +69,26 @@ const loadSources = async (sourceDir: string) => {
 
 export const getAvaliableSource = async ( sourceDir: string, filter=['.svx', '.md'] ) => {  
   // define recursive method.
-  const walk = async (sourcePath: string, initialContainer: Object) => {  
-    let items = await fs.readdir(sourcePath);
+  const walk = async (sourcePath: string, initialContainer: Object) => {
+    let items = await fs.promises.readdir(sourcePath);
     
-    items.map(async (item: string) => {
+    await Promise.all(items.map(async (item: string) => {
       const itemPath = path.join(sourcePath, item);
       const fullPath = getAbsoultPath(itemPath);
       
-      const fstat = await fs.stat(fullPath);
+      const fstat = await fs.promises.stat(fullPath);
       if (fstat.isDirectory())  {
         initialContainer = await walk(itemPath, initialContainer);
 
       } else if (fstat.isFile()) {
         filter.map( (sname: string) => {
-          // console.log(itemPath)
           if (item.includes(sname)) {
-            initialContainer[itemPath] = () => import(itemPath);
+            initialContainer[itemPath] = () => import(fullPath);
           }
         }); 
       }
-    });
+    }));
 
-    console.log("yeee", initialContainer);
     return initialContainer
   };
   

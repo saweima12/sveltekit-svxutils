@@ -2,7 +2,6 @@ import { loadConfig, loadSourcePages } from './source';
 import { classifyPages } from './classifier';
 import type { SourcePage, SourcePageContext, SourcePageCollection } from './types';
 
-
 let _config: Record<string, any> = undefined;
 /**
  * Get siteConfig 

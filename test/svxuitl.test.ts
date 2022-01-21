@@ -25,7 +25,6 @@ svxutils('it should be get project absoult path', async () => {
 svxutils('it should be get realtive path', async() => {
   const output = "test";
   const rtn = getRelativePath(`${process.cwd()}/test`);
-  console.log(`\n${rtn}`);
   assert.equal(output, rtn);
 });
 
@@ -48,9 +47,8 @@ svxutils('loadConfig() function should be return site.config.js', async() => {
 svxutils('loadSourcePages() fucntion should be work.', async () => {
   const relative_path = getRelativePath(join(_fixtures, "/docs"));
   const rtn = await getAvaliableSource(relative_path);
-
-  console.log(rtn);
-  
+  console.log(rtn)
+  assert.type(rtn, 'object');
 })
 
 
