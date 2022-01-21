@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { suite } from 'uvu';
-import { loadConfig, loadSourcePages } from '../src/source';
+import { loadConfig, getAvaliableSource } from '../src/source';
 import { getAbsoultPath, getRelativePath  } from '../src/internal';
 
 import * as assert from 'uvu/assert';
@@ -46,10 +46,9 @@ svxutils('loadConfig() function should be return site.config.js', async() => {
 });
 
 svxutils('loadSourcePages() fucntion should be work.', async () => {
-  const relative_path = getRelativePath(join(_fixtures, "docs"));
-  const rtn = await loadSourcePages(relative_path);
+  const relative_path = getRelativePath(join(_fixtures, "/docs"));
+  const rtn = await getAvaliableSource(relative_path);
 
-  console.log(relative_path);
   console.log(rtn);
   
 })

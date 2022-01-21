@@ -5,7 +5,7 @@ import { getAbsoultPath } from './internal';
 
 // Get: All Pages by source.
 export const loadSourcePages = async (sourceDir: string): Promise<SourcePageCollection> => {
-  return await _loadSources(sourceDir);
+  return await loadSources(sourceDir);
 };
 
 // Get Config.
@@ -17,7 +17,7 @@ export const loadConfig = async (configPath?: string): Promise<Record<string, an
 
 
 // loading: All md | svx from /docs/*
-const _loadSources = async (sourceDir: string) => {
+const loadSources = async (sourceDir: string) => {
   console.log('::: Loading docs ::: ');
   // loading source by vite & fast-glob.
   let sources = import.meta.glob('/docs/**/*.+(md|svx)');
@@ -64,6 +64,38 @@ const _loadSources = async (sourceDir: string) => {
   };
 };
 
+
+export const getAvaliableSource = async ( sourceDir: string, filter=['.svx', '.md'] ) => {  
+  // define recursive method.
+  const walk = async (sourcePath: string, initialContainer: Object) => {  
+    let items = await fs.readdir(sourcePath);
+    
+    items.map(async (item: string) => {
+      const itemPath = path.join(sourcePath, item);
+      const fullPath = getAbsoultPath(itemPath);
+      
+      const fstat = await fs.stat(fullPath);
+      if (fstat.isDirectory())  {
+        initialContainer = await walk(itemPath, initialContainer);
+
+      } else if (fstat.isFile()) {
+        filter.map( (sname: string) => {
+          // console.log(itemPath)
+          if (item.includes(sname)) {
+            initialContainer[itemPath] = () => import(itemPath);
+          }
+        }); 
+      }
+    });
+
+    console.log("yeee", initialContainer);
+    return initialContainer
+  };
+  
+  return await walk(sourceDir, {});
+
+}
+
 const getSlugParams = (indexPath: string) => {
   let baseName = path.basename(indexPath);
   // match slug params
@@ -73,8 +105,6 @@ const getSlugParams = (indexPath: string) => {
   if (match) return { slugKey: match[2], slugDate: new Date(match[1]) };
   return { slugKey: baseName, slugDate: undefined };
 };
-
-
 
 const attachRender = ( renderFunc : Function )  => {
   return () : SourcePageContext => {
