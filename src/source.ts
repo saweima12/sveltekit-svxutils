@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import type { SourcePage, SourcePageContext, SourcePageCollection } from './types';
-import { getAbsoultPath } from './internal';
+import { getAbsoultPath, getRelativePath } from './internal';
 
 // Get: All Pages by source.
 export const loadSourcePages = async (sourceDir: string): Promise<SourcePageCollection> => {
@@ -20,8 +20,9 @@ export const loadConfig = async (configPath?: string): Promise<Record<string, an
 const loadSources = async (sourceDir: string) => {
   console.log('::: Loading docs ::: ');
   console.log(sourceDir)
+  const relativeDirPath = getRelativePath(sourceDir)
   // loading source by vite & fast-glob.
-  let sources = await getAvaliableSource(sourceDir);
+  let sources = await getAvaliableSource(relativeDirPath);
   let pathMap: Record<string, SourcePage> = {};
   let slugMap: Record<string, Array<SourcePage>> = {};
   await Promise.all(
@@ -29,7 +30,7 @@ const loadSources = async (sourceDir: string) => {
       let pageObj = await pageAsync(); // get page data by lazyloading.
       // get file path & created datetime.
       const fullPath = path.join(process.cwd(), sourcePath);
-      const fStat = await fs.promises.stat(fullPath);
+      const fStat = await fs.promises.stat(sourcePath);
       let frontmatter = pageObj.metadata || {};
       // process indexPath & support customize indexPath by frontmatter.
       const ptn = new RegExp(`^${sourceDir}`);

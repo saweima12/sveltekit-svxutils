@@ -12,7 +12,7 @@ let _config: Record<string, any> = undefined;
 export const siteConfig = async (): Promise<Record<string, any>> => {
   
   if (!_config) {
-    const configPath = "/src/site.config.js";
+    const configPath = "./src/site.config.js";
     _config = await loadConfig(configPath);
   }
   return _config;
@@ -94,7 +94,7 @@ export const getPage = async (
 
 
 export const initializeMap = async () => {
-  const sourceDir = "/docs";
+  const sourceDir = "./docs";
   _pageMap = await loadSourcePages(sourceDir);
 };
 
